@@ -1,0 +1,32 @@
+services:
+  nginx:
+    image: nginx:1.26.2
+    container_name: nginx-server
+    ports:
+      - "80:80"
+    volumes:
+      - /nginxdatadir/conf:/etc/nginx  # 绑定本地 Nginx 配置文件目录
+      - /nginxdatadir/html:/usr/share/nginx/html # 绑定本地静态文件目录
+      - /nginxdatadir/logs:/var/log/nginx        # 绑定日志目录
+
+  elasticsearch:
+    image: elasticsearch:7.17.19
+    container_name: elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - "xpack.security.enabled=true" # 启用X-Pack安全性
+      - "elastic=123456" # 设置elastic用户的密码
+    volumes:
+      - /esdatadir/data:/usr/share/elasticsearch/data
+      - /esdatadir/logs:/usr/share/elasticsearch/logs
+      - /esdatadir/config:/usr/share/elasticsearch/config
+
+  redis:
+    image: redis:7.4
+    container_name: redis-server
+    ports:
+      - "6379:6379"
+    volumes:
+      - /redisdatadir/data:/data
